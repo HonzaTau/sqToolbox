@@ -1,8 +1,14 @@
-﻿<div ng-repeat="project in projects">
+﻿<div ng-repeat="project in projects track by $index">
 	<table cellspacing="0" style="width: 200; height: 200;">
 		<tr>
 			<td>
-				{{project.coverage}}
+				Coverage:{{project.coverage}}%
+			</td>
+			<td>
+				Duplicates:{{project.duplicated_lines_density}}%
+			</td>
+			<td>
+				Function Complexity:{{project.function_complexity}}
 			</td>
 		</tr>
 	</table>
