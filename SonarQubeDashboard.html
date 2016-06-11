@@ -1,0 +1,18 @@
+﻿<html>
+<head>
+    <title>SonarQube Dashboard</title>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular-cookies.js"></script>
+	
+    <script src="controllers/sqdController.js"></script>
+</head>
+<body>
+    <div ng-app="SonarQubeDashboardApp"
+         ng-controller="sqdController"
+		 >
+        <div ng-include="'views/sqdProjectDashboard.html'">
+        </div>
+    </div>
+</body>
+</html>
