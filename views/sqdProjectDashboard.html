@@ -2,13 +2,37 @@
 	<table cellspacing="0" style="width: 200; height: 200;">
 		<tr>
 			<td>
-				Coverage:{{project.coverage}}%
+				Name: {{project.name}}
 			</td>
+		</tr>
+		<tr>
 			<td>
-				Duplicates:{{project.duplicated_lines_density}}%
+				Blocker: <span ng-if="project.blocker_issues > 0">+</span>{{project.blocker_issues}}
 			</td>
+		</tr>
+		<tr>
 			<td>
-				Function Complexity:{{project.function_complexity}}
+				Critical: <span ng-if="project.critical_issues > 0">+</span>{{project.critical_issues}}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Major, Minor, Info: <span ng-if="project.minor_issues > 0">+</span>{{project.minor_issues}}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Coverage: <span ng-if="project.coverage_diff > 0">+</span>{{project.coverage_diff | number:1}}% ({{project.coverage}}%)
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Duplicates: <span ng-if="project.duplicated_lines_density_diff > 0">+</span>{{project.duplicated_lines_density_diff | number:1}}% ({{project.duplicated_lines_density}}%)
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Function Complexity: <span ng-if="project.function_complexity_diff > 0">+</span>{{project.function_complexity_diff | number:1}} ({{project.function_complexity}})
 			</td>
 		</tr>
 	</table>
