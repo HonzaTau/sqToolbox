@@ -7,32 +7,32 @@
 		</tr>
 		<tr>
 			<td>
-				Blocker: <span ng-if="project.blocker_issues > 0">+</span>{{project.blocker_issues}}
+				Blocker: <span ng-if="project.blockerIssues.diff > 0">+</span>{{project.blockerIssues.diff}}
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Critical: <span ng-if="project.critical_issues > 0">+</span>{{project.critical_issues}}
+				Critical: <span ng-if="project.criticalIssues.diff > 0">+</span>{{project.criticalIssues.diff}}
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Major, Minor, Info: <span ng-if="project.minor_issues > 0">+</span>{{project.minor_issues}}
+				Other: <span ng-if="project.otherIssues.diff > 0">+</span>{{project.otherIssues.diff}}
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Coverage: <span ng-if="project.coverage_diff > 0">+</span>{{project.coverage_diff | number:1}}% ({{project.coverage}}%)
+				Coverage: <span ng-if="project.coverage.diff > 0">+</span>{{project.coverage.diff | number:1}}% ({{project.coverage.first}}% =&gt; {{project.coverage.last}}%)
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Duplicates: <span ng-if="project.duplicated_lines_density_diff > 0">+</span>{{project.duplicated_lines_density_diff | number:1}}% ({{project.duplicated_lines_density}}%)
+				Duplicates: <span ng-if="project.duplicatedLinesDensity.diff > 0">+</span>{{project.duplicatedLinesDensity.diff | number:1}}% ({{project.duplicatedLinesDensity.first}}% =&gt; {{project.duplicatedLinesDensity.last}}%)
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Function Complexity: <span ng-if="project.function_complexity_diff > 0">+</span>{{project.function_complexity_diff | number:1}} ({{project.function_complexity}})
+				Function Complexity: <span ng-if="project.functionComplexity.diff > 0">+</span>{{project.functionComplexity.diff | number:1}} ({{project.functionComplexity.first}} =&gt; {{project.functionComplexity.last}})
 			</td>
 		</tr>
 	</table>

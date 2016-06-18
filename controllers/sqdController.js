@@ -33,31 +33,40 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 		
 		$http.get(timemachineApiUrl)
 			.success(function (response, status) {
-				var coverage_index =
-					duplicated_lines_density_index =
-					function_complexity_index = 0;
+				var coverageIndex =
+					duplicatedLinesDensityIndex =
+					functionComplexityIndex = 0;
 				for (colIndex = 0; colIndex < response[0].cols.length; colIndex++) {
 					switch (response[0].cols[colIndex].metric) {
 						case "coverage":
-							coverage_index = colIndex;
+							coverageIndex = colIndex;
 							break;
 						case "duplicated_lines_density":
-							duplicated_lines_density_index = colIndex;
+							duplicatedLinesDensityIndex = colIndex;
 							break;
 						case "function_complexity":
-							function_complexity_index = colIndex;
+							functionComplexityIndex = colIndex;
 							break;
 					}
 				};
 				var firstCell = response[0].cells[0];
 				var lastCell = response[0].cells[response[0].cells.length - 1];
 				
-				$scope.projects[projectIndex].coverage = lastCell.v[coverage_index];
-				$scope.projects[projectIndex].coverage_diff = lastCell.v[coverage_index] - firstCell.v[coverage_index];
-				$scope.projects[projectIndex].function_complexity = lastCell.v[function_complexity_index];
-				$scope.projects[projectIndex].function_complexity_diff = lastCell.v[function_complexity_index] - firstCell.v[function_complexity_index];
-				$scope.projects[projectIndex].duplicated_lines_density = lastCell.v[duplicated_lines_density_index];
-				$scope.projects[projectIndex].duplicated_lines_density_diff = lastCell.v[duplicated_lines_density_index] - firstCell.v[duplicated_lines_density_index];
+				$scope.projects[projectIndex].coverage = {
+					first: firstCell.v[coverageIndex],
+					last:  lastCell.v[coverageIndex],
+					diff:  lastCell.v[coverageIndex] - firstCell.v[coverageIndex],
+				};
+				$scope.projects[projectIndex].functionComplexity = {
+					first: firstCell.v[functionComplexityIndex],
+					last:  lastCell.v[functionComplexityIndex],
+					diff:  lastCell.v[functionComplexityIndex] - firstCell.v[functionComplexityIndex],
+				};
+				$scope.projects[projectIndex].duplicatedLinesDensity = {
+					first: firstCell.v[duplicatedLinesDensityIndex],
+					last:  lastCell.v[duplicatedLinesDensityIndex],
+					diff:  lastCell.v[duplicatedLinesDensityIndex] - firstCell.v[duplicatedLinesDensityIndex],
+				};
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + timemachineApiUrl);
@@ -69,7 +78,9 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 		
 		$http.get(issuesApiUrl + "&severities=BLOCKER")
 			.success(function (response, status) {
-				$scope.projects[projectIndex].blocker_issues = response.total;
+				$scope.projects[projectIndex].blockerIssues = {
+					diff: response.total,
+				};
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + issuesApiUrl);
@@ -77,7 +88,9 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 		
 		$http.get(issuesApiUrl + "&severities=CRITICAL")
 			.success(function (response, status) {
-				$scope.projects[projectIndex].critical_issues = response.total;
+				$scope.projects[projectIndex].criticalIssues = {
+					diff: response.total,
+				};
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + issuesApiUrl);
@@ -85,7 +98,9 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 		
 		$http.get(issuesApiUrl + "&severities=INFO,MINOR,MAJOR")
 			.success(function (response, status) {
-				$scope.projects[projectIndex].minor_issues = response.total;
+				$scope.projects[projectIndex].otherIssues = {
+					diff: response.total,
+				};
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + issuesApiUrl);
