@@ -1,7 +1,11 @@
 ﻿<md-content class="md-padding">
 	<div layout="row">
 		<md-card flex ng-repeat="project in projects track by $index">
-			<h2>{{project.name}}</h2>
+			<md-toolbar layout="row" class="md-hue-3">
+				<div class="md-toolbar-tools">
+					<span>{{project.name}}</span>
+				</div>
+			</md-toolbar>		
 			<md-card-content>
 				<table cellspacing="0">
 					<tr>
