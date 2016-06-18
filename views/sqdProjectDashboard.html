@@ -1,5 +1,5 @@
 ﻿<div ng-repeat="project in projects track by $index">
-	<table cellspacing="0" style="width: 200; height: 200;">
+	<table cellspacing="0">
 		<tr>
 			<td>
 				Name: {{project.name}}
@@ -7,17 +7,17 @@
 		</tr>
 		<tr>
 			<td>
-				Blocker: <span ng-if="project.blockerIssues.diff > 0">+</span>{{project.blockerIssues.diff}}
+				Blocker: <span ng-if="project.blockerIssues.diff > 0">+</span>{{project.blockerIssues.diff}} ({{project.blockerIssues.first}} =&gt; {{project.blockerIssues.last}})
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Critical: <span ng-if="project.criticalIssues.diff > 0">+</span>{{project.criticalIssues.diff}}
+				Critical: <span ng-if="project.criticalIssues.diff > 0">+</span>{{project.criticalIssues.diff}} ({{project.criticalIssues.first}} =&gt; {{project.criticalIssues.last}})
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Other: <span ng-if="project.otherIssues.diff > 0">+</span>{{project.otherIssues.diff}}
+				Other: <span ng-if="project.otherIssues.diff > 0">+</span>{{project.otherIssues.diff}} ({{project.otherIssues.first}} =&gt; {{project.otherIssues.last}})
 			</td>
 		</tr>
 		<tr>

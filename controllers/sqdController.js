@@ -3,12 +3,12 @@
 	projects: [
 		{
 			projectKey: "NCentral_AgentWindows_CurrentVersion",
-			baselineDate: "2016-02-13T13:02:59%2b0100",
+			baselineDate: "2016-02-13T13:02:59+0100",
 			name: "dev-10.3",
 		},
 		{
 			projectKey: "NCentral_AgentWindows_SprintDSRCRSMRemoval",
-			baselineDate: "2016-02-13T13:02:59%2b0100",
+			baselineDate: "2016-05-13T11:18:31+0200",
 			name: "DSRC Removal",
 		},
 	],
@@ -29,7 +29,7 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 	$scope.getMetricsForProject = function(projectIndex) {
 		var timemachineApiUrl = sqdConfiguration.sonarQubeUrl + "/api/timemachine/index?&metrics=duplicated_blocks,duplicated_lines,duplicated_lines_density,coverage,line_coverage,function_complexity,file_complexity,class_complexity";
 		timemachineApiUrl += "&resource=" + sqdConfiguration.projects[projectIndex].projectKey;
-		timemachineApiUrl += "&fromDateTime=" + sqdConfiguration.projects[projectIndex].baselineDate;
+		timemachineApiUrl += "&fromDateTime=" + encodeURIComponent(sqdConfiguration.projects[projectIndex].baselineDate);
 		
 		$http.get(timemachineApiUrl)
 			.success(function (response, status) {
@@ -71,41 +71,81 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + timemachineApiUrl);
 			});
+
+		var issuesFirstApiUrl = sqdConfiguration.sonarQubeUrl + "/api/issues/search?resolved=false&ps=1";
+		issuesFirstApiUrl += "&projectKeys=" + sqdConfiguration.projects[projectIndex].projectKey;
+		issuesFirstApiUrl += "&createdBefore=" + encodeURIComponent(getOneSecondAfterBaselineDate(sqdConfiguration.projects[projectIndex].baselineDate));
+
+		var issuesLastApiUrl = sqdConfiguration.sonarQubeUrl + "/api/issues/search?resolved=false&ps=1";
+		issuesLastApiUrl += "&projectKeys=" + sqdConfiguration.projects[projectIndex].projectKey;
+		
+		$scope.projects[projectIndex].blockerIssues = {};
+		$scope.projects[projectIndex].criticalIssues = {};
+		$scope.projects[projectIndex].otherIssues = {};
+		
+		$http.get(issuesFirstApiUrl + "&severities=BLOCKER")
+			.success(function (response, status) {
+				$scope.projects[projectIndex].blockerIssues.first = response.total;
+				$scope.projects[projectIndex].blockerIssues.diff = $scope.projects[projectIndex].blockerIssues.last - $scope.projects[projectIndex].blockerIssues.first;
+			})
+			.error(function (response, status) {
+				alert('Error when getting metrics using ' + issuesFirstApiUrl);
+			});
+		
+		$http.get(issuesFirstApiUrl + "&severities=CRITICAL")
+			.success(function (response, status) {
+				$scope.projects[projectIndex].criticalIssues.first = response.total;
+				$scope.projects[projectIndex].criticalIssues.diff = $scope.projects[projectIndex].criticalIssues.last - $scope.projects[projectIndex].criticalIssues.first;
+			})
+			.error(function (response, status) {
+				alert('Error when getting metrics using ' + issuesFirstApiUrl);
+			});
+		
+		$http.get(issuesFirstApiUrl + "&severities=INFO,MINOR,MAJOR")
+			.success(function (response, status) {
+				$scope.projects[projectIndex].otherIssues.first = response.total;
+				$scope.projects[projectIndex].otherIssues.diff = $scope.projects[projectIndex].otherIssues.last - $scope.projects[projectIndex].otherIssues.first;
+			})
+			.error(function (response, status) {
+				alert('Error when getting metrics using ' + issuesFirstApiUrl);
+			});
+
+		
+		$http.get(issuesLastApiUrl + "&severities=BLOCKER")
+			.success(function (response, status) {
+				$scope.projects[projectIndex].blockerIssues.last = response.total;
+				$scope.projects[projectIndex].blockerIssues.diff = $scope.projects[projectIndex].blockerIssues.last - $scope.projects[projectIndex].blockerIssues.first;
+			})
+			.error(function (response, status) {
+				alert('Error when getting metrics using ' + issuesLastApiUrl);
+			});
+		
+		$http.get(issuesLastApiUrl + "&severities=CRITICAL")
+			.success(function (response, status) {
+				$scope.projects[projectIndex].criticalIssues.last = response.total;
+				$scope.projects[projectIndex].criticalIssues.diff = $scope.projects[projectIndex].criticalIssues.last - $scope.projects[projectIndex].criticalIssues.first;
+			})
+			.error(function (response, status) {
+				alert('Error when getting metrics using ' + issuesLastApiUrl);
+			});
+		
+		$http.get(issuesLastApiUrl + "&severities=INFO,MINOR,MAJOR")
+			.success(function (response, status) {
+				$scope.projects[projectIndex].otherIssues.last = response.total;
+				$scope.projects[projectIndex].otherIssues.diff = $scope.projects[projectIndex].otherIssues.last - $scope.projects[projectIndex].otherIssues.first;
+			})
+			.error(function (response, status) {
+				alert('Error when getting metrics using ' + issuesLastApiUrl);
+			});
 			
-		var issuesApiUrl = sqdConfiguration.sonarQubeUrl + "/api/issues/search?resolved=false&ps=1";
-		issuesApiUrl += "&projectKeys=" + sqdConfiguration.projects[projectIndex].projectKey;
-		issuesApiUrl += "&createdAfter=" + sqdConfiguration.projects[projectIndex].baselineDate;
-		
-		$http.get(issuesApiUrl + "&severities=BLOCKER")
-			.success(function (response, status) {
-				$scope.projects[projectIndex].blockerIssues = {
-					diff: response.total,
-				};
-			})
-			.error(function (response, status) {
-				alert('Error when getting metrics using ' + issuesApiUrl);
-			});
-		
-		$http.get(issuesApiUrl + "&severities=CRITICAL")
-			.success(function (response, status) {
-				$scope.projects[projectIndex].criticalIssues = {
-					diff: response.total,
-				};
-			})
-			.error(function (response, status) {
-				alert('Error when getting metrics using ' + issuesApiUrl);
-			});
-		
-		$http.get(issuesApiUrl + "&severities=INFO,MINOR,MAJOR")
-			.success(function (response, status) {
-				$scope.projects[projectIndex].otherIssues = {
-					diff: response.total,
-				};
-			})
-			.error(function (response, status) {
-				alert('Error when getting metrics using ' + issuesApiUrl);
-			});
-		
+	}
+	
+	function getOneSecondAfterBaselineDate(baselineDate) {
+		var newBaselineDate = new Date(baselineDate);
+		newBaselineDate.setSeconds(newBaselineDate.getSeconds() + 1);
+		var newBaselineDateAsString = newBaselineDate.toISOString();
+		newBaselineDateAsString = newBaselineDateAsString.substring(0, newBaselineDateAsString.length - 5);
+		return newBaselineDateAsString + '+0000';
 	}
 
 	$scope.getMetrics();
