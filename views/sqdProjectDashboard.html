@@ -1,39 +1,41 @@
-﻿<div ng-repeat="project in projects track by $index">
-	<table cellspacing="0">
-		<tr>
-			<td>
-				Name: {{project.name}}
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Blocker: <span ng-if="project.blockerIssues.diff > 0">+</span>{{project.blockerIssues.diff}} ({{project.blockerIssues.first}} =&gt; {{project.blockerIssues.last}})
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Critical: <span ng-if="project.criticalIssues.diff > 0">+</span>{{project.criticalIssues.diff}} ({{project.criticalIssues.first}} =&gt; {{project.criticalIssues.last}})
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Other: <span ng-if="project.otherIssues.diff > 0">+</span>{{project.otherIssues.diff}} ({{project.otherIssues.first}} =&gt; {{project.otherIssues.last}})
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Coverage: <span ng-if="project.coverage.diff > 0">+</span>{{project.coverage.diff | number:1}}% ({{project.coverage.first}}% =&gt; {{project.coverage.last}}%)
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Duplicates: <span ng-if="project.duplicatedLinesDensity.diff > 0">+</span>{{project.duplicatedLinesDensity.diff | number:1}}% ({{project.duplicatedLinesDensity.first}}% =&gt; {{project.duplicatedLinesDensity.last}}%)
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Function Complexity: <span ng-if="project.functionComplexity.diff > 0">+</span>{{project.functionComplexity.diff | number:1}} ({{project.functionComplexity.first}} =&gt; {{project.functionComplexity.last}})
-			</td>
-		</tr>
-	</table>
-</div>
+﻿<md-content class="md-padding">
+	<div layout="row">
+		<md-card flex ng-repeat="project in projects track by $index">
+			<h2>{{project.name}}</h2>
+			<md-card-content>
+				<table cellspacing="0">
+					<tr>
+						<td>
+							Blocker: <span ng-if="project.blockerIssues.diff > 0">+</span>{{project.blockerIssues.diff}} ({{project.blockerIssues.first}} =&gt; {{project.blockerIssues.last}})
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Critical: <span ng-if="project.criticalIssues.diff > 0">+</span>{{project.criticalIssues.diff}} ({{project.criticalIssues.first}} =&gt; {{project.criticalIssues.last}})
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Other: <span ng-if="project.otherIssues.diff > 0">+</span>{{project.otherIssues.diff}} ({{project.otherIssues.first}} =&gt; {{project.otherIssues.last}})
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Coverage: <span ng-if="project.coverage.diff > 0">+</span>{{project.coverage.diff | number:1}}% ({{project.coverage.first}}% =&gt; {{project.coverage.last}}%)
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Duplicates: <span ng-if="project.duplicatedLinesDensity.diff > 0">+</span>{{project.duplicatedLinesDensity.diff | number:1}}% ({{project.duplicatedLinesDensity.first}}% =&gt; {{project.duplicatedLinesDensity.last}}%)
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Function Complexity: <span ng-if="project.functionComplexity.diff > 0">+</span>{{project.functionComplexity.diff | number:1}} ({{project.functionComplexity.first}} =&gt; {{project.functionComplexity.last}})
+						</td>
+					</tr>
+				</table>
+			</md-card-content>
+		</md-card>
+	</div>
+</md-content>
