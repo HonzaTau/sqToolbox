@@ -22,6 +22,12 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 		$scope.projects = [];
 		for (projectIndex = 0; projectIndex < sqdConfiguration.projects.length; projectIndex++) { 
 			$scope.projects[projectIndex] = { name: sqdConfiguration.projects[projectIndex].name, };
+			/*
+			// Debug function for converting the object into json string
+			$scope.projects[projectIndex].json = function() {
+				return JSON.stringify(this);
+			}
+			*/
 			$scope.getMetricsForProject(projectIndex);
 		}
 	}
@@ -67,6 +73,7 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 					last:  lastCell.v[duplicatedLinesDensityIndex],
 					diff:  lastCell.v[duplicatedLinesDensityIndex] - firstCell.v[duplicatedLinesDensityIndex],
 				};
+				
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + timemachineApiUrl);
@@ -148,5 +155,78 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 		return newBaselineDateAsString + '+0000';
 	}
 
+	$scope.tests_getMetrics = function() {
+		$scope.projects = [];
+		
+		$scope.projects[0] = {  
+		   "name":"dev-10.3",
+		   "blockerIssues":{  
+			  "last":1,
+			  "diff":0,
+			  "first":1
+		   },
+		   "criticalIssues":{  
+			  "first":180,
+			  "diff":0,
+			  "last":180
+		   },
+		   "otherIssues":{  
+			  "first":17922,
+			  "diff":33037,
+			  "last":50959
+		   },
+		   "coverage":{  
+			  "first":3.8,
+			  "last":4.7,
+			  "diff":0.9000000000000004
+		   },
+		   "functionComplexity":{  
+			  "first":2.1,
+			  "last":3.1,
+			  "diff":1
+		   },
+		   "duplicatedLinesDensity":{  
+			  "first":32.8,
+			  "last":17.7,
+			  "diff":-15.099999999999998
+		   }
+		};
+		
+		$scope.projects[1] = {
+		   "name":"DSRC Removal",
+		   "blockerIssues":{
+			  "first":1,
+			  "diff":0,
+			  "last":1
+		   },
+		   "criticalIssues":{
+			  "first":203,
+			  "diff":0,
+			  "last":203
+		   },
+		   "otherIssues":{
+			  "first":63999,
+			  "diff":460,
+			  "last":64459
+		   },
+		   "coverage":{
+			  "first":3.8,
+			  "last":4.6,
+			  "diff":0.7999999999999998
+		   },
+		   "functionComplexity":{
+			  "first":2.1,
+			  "last":2.1,
+			  "diff":0
+		   },
+		   "duplicatedLinesDensity":{
+			  "first":32.8,
+			  "last":32.9,
+			  "diff":0.10000000000000142
+		   }
+		};
+	}
+
+	// $scope.tests_getMetrics();
 	$scope.getMetrics();
 });
