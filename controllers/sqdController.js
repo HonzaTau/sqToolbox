@@ -14,9 +14,9 @@
 	],
 };
 
-var app = angular.module("SonarQubeDashboardApp", ['ngCookies']);
+var app = angular.module("SonarQubeDashboardApp", ['ngMaterial']);
 
-app.controller("sqdController", function ($scope, $http, $cookies) {
+app.controller("sqdController", function ($scope, $http) {
 
 	$scope.getMetrics = function() {
 		$scope.projects = [];
@@ -227,6 +227,6 @@ app.controller("sqdController", function ($scope, $http, $cookies) {
 		};
 	}
 
-	// $scope.tests_getMetrics();
-	$scope.getMetrics();
+	$scope.tests_getMetrics();
+	// $scope.getMetrics();
 });
