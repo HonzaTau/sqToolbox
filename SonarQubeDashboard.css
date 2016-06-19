@@ -1,0 +1,22 @@
+.metrics {
+	width: 420px;
+}
+
+.metric-row {
+	height: 30px;
+	vertical-align: middle;
+}
+
+.metric-label {
+	width: 170px;
+}
+.metric-diff {
+	width: 60px;
+	text-align: right;
+}
+.metric-change {
+	width: 150px;
+	text-align: center;
+	padding-left: 5px;
+	font-size: small;
+}
