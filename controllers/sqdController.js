@@ -61,17 +61,20 @@ app.controller("sqdController", function ($scope, $http) {
 				$scope.projects[projectIndex].coverage = {
 					first: firstCell.v[coverageIndex],
 					last:  lastCell.v[coverageIndex],
-					diff:  lastCell.v[coverageIndex] - firstCell.v[coverageIndex],
+					diff:  function() { return getDiff(this.first, this.last, 1); },
+					status:	function() { return getStatus(this, true); },
 				};
 				$scope.projects[projectIndex].functionComplexity = {
 					first: firstCell.v[functionComplexityIndex],
 					last:  lastCell.v[functionComplexityIndex],
-					diff:  lastCell.v[functionComplexityIndex] - firstCell.v[functionComplexityIndex],
+					diff:  function() { return getDiff(this.first, this.last, 1); },
+					status:	function() { return getStatus(this, false); },
 				};
 				$scope.projects[projectIndex].duplicatedLinesDensity = {
 					first: firstCell.v[duplicatedLinesDensityIndex],
 					last:  lastCell.v[duplicatedLinesDensityIndex],
-					diff:  lastCell.v[duplicatedLinesDensityIndex] - firstCell.v[duplicatedLinesDensityIndex],
+					diff:  function() { return getDiff(this.first, this.last, 1); },
+					status:	function() { return getStatus(this, false); },
 				};
 				
 			})
@@ -86,14 +89,22 @@ app.controller("sqdController", function ($scope, $http) {
 		var issuesLastApiUrl = sqdConfiguration.sonarQubeUrl + "/api/issues/search?resolved=false&ps=1";
 		issuesLastApiUrl += "&projectKeys=" + sqdConfiguration.projects[projectIndex].projectKey;
 		
-		$scope.projects[projectIndex].blockerIssues = {};
-		$scope.projects[projectIndex].criticalIssues = {};
-		$scope.projects[projectIndex].otherIssues = {};
+		$scope.projects[projectIndex].blockerIssues = {
+			diff: 	function() { return getDiff(this.first, this.last, 0); },
+			status:	function() { return getStatus(this, false); },
+		};
+		$scope.projects[projectIndex].criticalIssues = {
+			diff: 	function() { return getDiff(this.first, this.last, 0); },
+			status:	function() { return getStatus(this, false); },
+		};
+		$scope.projects[projectIndex].otherIssues = {
+			diff: 	function() { return getDiff(this.first, this.last, 0); },
+			status:	function() { return getStatus(this, false); },
+		};
 		
 		$http.get(issuesFirstApiUrl + "&severities=BLOCKER")
 			.success(function (response, status) {
 				$scope.projects[projectIndex].blockerIssues.first = response.total;
-				$scope.projects[projectIndex].blockerIssues.diff = $scope.projects[projectIndex].blockerIssues.last - $scope.projects[projectIndex].blockerIssues.first;
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + issuesFirstApiUrl);
@@ -102,7 +113,6 @@ app.controller("sqdController", function ($scope, $http) {
 		$http.get(issuesFirstApiUrl + "&severities=CRITICAL")
 			.success(function (response, status) {
 				$scope.projects[projectIndex].criticalIssues.first = response.total;
-				$scope.projects[projectIndex].criticalIssues.diff = $scope.projects[projectIndex].criticalIssues.last - $scope.projects[projectIndex].criticalIssues.first;
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + issuesFirstApiUrl);
@@ -111,7 +121,6 @@ app.controller("sqdController", function ($scope, $http) {
 		$http.get(issuesFirstApiUrl + "&severities=INFO,MINOR,MAJOR")
 			.success(function (response, status) {
 				$scope.projects[projectIndex].otherIssues.first = response.total;
-				$scope.projects[projectIndex].otherIssues.diff = $scope.projects[projectIndex].otherIssues.last - $scope.projects[projectIndex].otherIssues.first;
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + issuesFirstApiUrl);
@@ -121,7 +130,6 @@ app.controller("sqdController", function ($scope, $http) {
 		$http.get(issuesLastApiUrl + "&severities=BLOCKER")
 			.success(function (response, status) {
 				$scope.projects[projectIndex].blockerIssues.last = response.total;
-				$scope.projects[projectIndex].blockerIssues.diff = $scope.projects[projectIndex].blockerIssues.last - $scope.projects[projectIndex].blockerIssues.first;
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + issuesLastApiUrl);
@@ -130,7 +138,6 @@ app.controller("sqdController", function ($scope, $http) {
 		$http.get(issuesLastApiUrl + "&severities=CRITICAL")
 			.success(function (response, status) {
 				$scope.projects[projectIndex].criticalIssues.last = response.total;
-				$scope.projects[projectIndex].criticalIssues.diff = $scope.projects[projectIndex].criticalIssues.last - $scope.projects[projectIndex].criticalIssues.first;
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + issuesLastApiUrl);
@@ -139,7 +146,6 @@ app.controller("sqdController", function ($scope, $http) {
 		$http.get(issuesLastApiUrl + "&severities=INFO,MINOR,MAJOR")
 			.success(function (response, status) {
 				$scope.projects[projectIndex].otherIssues.last = response.total;
-				$scope.projects[projectIndex].otherIssues.diff = $scope.projects[projectIndex].otherIssues.last - $scope.projects[projectIndex].otherIssues.first;
 			})
 			.error(function (response, status) {
 				alert('Error when getting metrics using ' + issuesLastApiUrl);
@@ -161,8 +167,6 @@ app.controller("sqdController", function ($scope, $http) {
 		url += "id=" + project.projectKey;
 		window.open(url,'_blank');
 	}
-
-	
 	
 	function getOneSecondAfterBaselineDate(baselineDate) {
 		var newBaselineDate = new Date(baselineDate);
@@ -170,6 +174,31 @@ app.controller("sqdController", function ($scope, $http) {
 		var newBaselineDateAsString = newBaselineDate.toISOString();
 		newBaselineDateAsString = newBaselineDateAsString.substring(0, newBaselineDateAsString.length - 5);
 		return newBaselineDateAsString + '+0000';
+	}
+	
+	function getDiff(first, last, numberOfDecimals) {
+		var diff = (last - first).toFixed(numberOfDecimals);
+		if (diff > 0) {
+			diff = "+" + diff;
+		}
+		return diff;
+	}
+
+	function getStatus(metric, moreIsBetter) {
+		var diff = metric.last - metric.first;
+		if (!moreIsBetter) {
+			diff *= -1;
+		}
+		
+		var status = "none";
+		if (diff > 0) {
+			status = "improvement";
+		}
+		else if (diff < 0) {
+			status = "decline";
+		}
+		
+		return status;
 	}
 
 	$scope.tests_getMetrics = function() {
@@ -248,6 +277,6 @@ app.controller("sqdController", function ($scope, $http) {
 		};
 	}
 
-	$scope.tests_getMetrics();
-	// $scope.getMetrics();
+	// $scope.tests_getMetrics();
+	$scope.getMetrics();
 });
