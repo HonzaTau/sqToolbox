@@ -61,19 +61,19 @@ app.controller("sqdController", function ($scope, $http) {
 				$scope.projects[projectIndex].coverage = {
 					first: firstCell.v[coverageIndex],
 					last:  lastCell.v[coverageIndex],
-					diff:  function() { return getDiff(this.first, this.last, 1); },
+					diff:  function() { return getDiff(this, 1); },
 					status:	function() { return getStatus(this, true); },
 				};
 				$scope.projects[projectIndex].functionComplexity = {
 					first: firstCell.v[functionComplexityIndex],
 					last:  lastCell.v[functionComplexityIndex],
-					diff:  function() { return getDiff(this.first, this.last, 1); },
+					diff:  function() { return getDiff(this, 1); },
 					status:	function() { return getStatus(this, false); },
 				};
 				$scope.projects[projectIndex].duplicatedLinesDensity = {
 					first: firstCell.v[duplicatedLinesDensityIndex],
 					last:  lastCell.v[duplicatedLinesDensityIndex],
-					diff:  function() { return getDiff(this.first, this.last, 1); },
+					diff:  function() { return getDiff(this, 1); },
 					status:	function() { return getStatus(this, false); },
 				};
 				
@@ -90,15 +90,15 @@ app.controller("sqdController", function ($scope, $http) {
 		issuesLastApiUrl += "&projectKeys=" + sqdConfiguration.projects[projectIndex].projectKey;
 		
 		$scope.projects[projectIndex].blockerIssues = {
-			diff: 	function() { return getDiff(this.first, this.last, 0); },
+			diff: 	function() { return getDiff(this, 0); },
 			status:	function() { return getStatus(this, false); },
 		};
 		$scope.projects[projectIndex].criticalIssues = {
-			diff: 	function() { return getDiff(this.first, this.last, 0); },
+			diff: 	function() { return getDiff(this, 0); },
 			status:	function() { return getStatus(this, false); },
 		};
 		$scope.projects[projectIndex].otherIssues = {
-			diff: 	function() { return getDiff(this.first, this.last, 0); },
+			diff: 	function() { return getDiff(this, 0); },
 			status:	function() { return getStatus(this, false); },
 		};
 		
@@ -176,8 +176,8 @@ app.controller("sqdController", function ($scope, $http) {
 		return newBaselineDateAsString + '+0000';
 	}
 	
-	function getDiff(first, last, numberOfDecimals) {
-		var diff = (last - first).toFixed(numberOfDecimals);
+	function getDiff(metric, numberOfDecimals) {
+		var diff = (metric.last - metric.first).toFixed(numberOfDecimals);
 		if (diff > 0) {
 			diff = "+" + diff;
 		}
