@@ -21,7 +21,7 @@ app.controller("sqdController", function ($scope, $http) {
 	$scope.getMetrics = function() {
 		$scope.projects = [];
 		for (projectIndex = 0; projectIndex < sqdConfiguration.projects.length; projectIndex++) { 
-			$scope.projects[projectIndex] = { name: sqdConfiguration.projects[projectIndex].name, };
+			$scope.projects[projectIndex] = sqdConfiguration.projects[projectIndex];
 			/*
 			// Debug function for converting the object into json string
 			$scope.projects[projectIndex].json = function() {
@@ -147,6 +147,23 @@ app.controller("sqdController", function ($scope, $http) {
 			
 	}
 	
+	$scope.openIssuesList = function(project, severity) {
+		var url = sqdConfiguration.sonarQubeUrl + "/component_issues/index?";
+		url += "id=" + project.projectKey;
+		url += "#resolved=false";
+		url += "|createdAfter=" + encodeURIComponent(project.baselineDate);
+		url += "|severities=" + encodeURIComponent(severity);
+		window.open(url,'_blank');
+	}
+	
+	$scope.openOverview = function(project, overviewType) {
+		var url = sqdConfiguration.sonarQubeUrl + "/overview/" + overviewType + "?";
+		url += "id=" + project.projectKey;
+		window.open(url,'_blank');
+	}
+
+	
+	
 	function getOneSecondAfterBaselineDate(baselineDate) {
 		var newBaselineDate = new Date(baselineDate);
 		newBaselineDate.setSeconds(newBaselineDate.getSeconds() + 1);
@@ -160,7 +177,9 @@ app.controller("sqdController", function ($scope, $http) {
 		
 		$scope.projects[0] = {  
 		   "name":"dev-10.3",
-		   "blockerIssues":{  
+		   "projectKey": "NCentral_AgentWindows_CurrentVersion",
+		   "baselineDate": "2016-02-13T13:02:59+0100",
+	       "blockerIssues":{  
 			  "last":1,
 			  "diff":0,
 			  "first":1
@@ -194,6 +213,8 @@ app.controller("sqdController", function ($scope, $http) {
 		
 		$scope.projects[1] = {
 		   "name":"DSRC Removal",
+		   "projectKey": "NCentral_AgentWindows_SprintDSRCRSMRemoval",
+		   "baselineDate": "2016-05-13T11:18:31+0200",
 		   "blockerIssues":{
 			  "first":1,
 			  "diff":0,

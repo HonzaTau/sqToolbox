@@ -4,11 +4,12 @@
 
 .metric-row {
 	height: 30px;
-	vertical-align: middle;
+	padding-top: 7px;
 }
 
 .metric-label {
 	width: 170px;
+	display: inline-block;
 }
 .metric-diff {
 	width: 60px;
