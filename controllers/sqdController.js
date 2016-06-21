@@ -30,6 +30,7 @@ app.controller("sqdController", function ($scope, $http) {
 			*/
 			$scope.getMetricsForProject(projectIndex);
 		}
+		$scope.selectedProject = $scope.projects[0];
 	}
 
 	$scope.getMetricsForProject = function(projectIndex) {
@@ -78,6 +79,37 @@ app.controller("sqdController", function ($scope, $http) {
 					diff:  function() { return getDiff(this, 1); },
 					status:	function() { return getStatus(this, false); },
 				};
+				
+				$scope.projects[projectIndex].history = [];
+				var lastCell = {
+					coverage: 0,
+					functionComplexity: 0,
+					duplicatedLinesDensity: 0,
+				};
+				for (cellIndex = 0; cellIndex < response[0].cells.length; cellIndex++) {
+					cell = response[0].cells[cellIndex];
+					$scope.projects[projectIndex].history.push({
+						analysisDate: new Date(cell.d),
+						coverage: {
+							first: (cellIndex > 0) ? $scope.projects[projectIndex].history[cellIndex - 1].coverage.last : undefined,
+							last: cell.v[coverageIndex],
+							diff:  function() { return getDiff(this, 1); },
+							status:	function() { return getStatus(this, true); },
+						},
+						functionComplexity: {
+							first: (cellIndex > 0) ? $scope.projects[projectIndex].history[cellIndex - 1].functionComplexity.last : undefined,
+							last: cell.v[functionComplexityIndex],
+							diff:  function() { return getDiff(this, 1); },
+							status:	function() { return getStatus(this, false); },
+						},
+						duplicatedLinesDensity: {
+							first: (cellIndex > 0) ? $scope.projects[projectIndex].history[cellIndex - 1].duplicatedLinesDensity.last : undefined,
+							last: cell.v[duplicatedLinesDensityIndex],
+							diff:  function() { return getDiff(this, 1); },
+							status:	function() { return getStatus(this, false); },
+						},
+					});
+				}; 
 				
 			})
 			.error(function (response, status) {
@@ -180,8 +212,10 @@ app.controller("sqdController", function ($scope, $http) {
 	
 	function getDiff(metric, numberOfDecimals) {
 		var diff = (metric.last - metric.first).toFixed(numberOfDecimals);
-		if (diff > 0) {
-			diff = "+" + diff;
+		if (isNaN(diff)) {
+			return "";
+		} else if (diff > 0) {
+			return "+" + diff;
 		}
 		return diff;
 	}

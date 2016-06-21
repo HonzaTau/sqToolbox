@@ -31,3 +31,42 @@
 	padding-left: 5px;
 	font-size: small;
 }
+
+div.history-header div.history-analysisDate {
+	width: 220px;
+	text-align: center;
+	font-weight: bold;
+}
+.history-header .history-coverage {
+	width: 100px;
+	text-align: center;
+	font-weight: bold;
+}
+.history-header .history-duplicatedLinesDensity {
+	width: 100px;
+	text-align: center;
+	font-weight: bold;
+}
+.history-header .history-functionComplexity {
+	width: 100px;
+	text-align: center;
+	font-weight: bold;
+}
+
+
+.history-row .history-analysisDate {
+	width: 220px;
+	text-align: center;
+}
+.history-row .history-coverage {
+	width: 100px;
+	text-align: right;
+}
+.history-row .history-duplicatedLinesDensity {
+	width: 100px;
+	text-align: right;
+}
+.history-row .history-functionComplexity {
+	width: 100px;
+	text-align: right;
+}
