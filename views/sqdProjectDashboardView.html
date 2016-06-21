@@ -1,0 +1,69 @@
+﻿<div layout="row">
+	<md-card ng-repeat="project in projects track by $index" class="metrics">
+		<md-toolbar layout="row" class="md-hue-3">
+			<div class="md-toolbar-tools">
+				<span>{{project.name}}</span>
+			</div>
+		</md-toolbar>		
+		<md-card-content>
+			<md-subheader>
+				From: {{project.baselineDate}}<br/>
+				To: {{project.lastAnalysisDate}}
+			</md-subheader>
+			<div layout="row" class="metric-row" ng-click="openIssuesList(project, 'BLOCKER')">
+				<div layout="column" class="metric-label">Blocker Issues</div>
+				<div layout="column" ng-class="'metric-diff status-' + project.blockerIssues.status()">
+					{{project.blockerIssues.diff()}}
+				</div>
+				<div layout="column" class="metric-change">
+					({{project.blockerIssues.first}} =&gt; {{project.blockerIssues.last}})
+				</div>
+			</div>
+			<div layout="row" class="metric-row" ng-click="openIssuesList(project, 'CRITICAL')">
+				<div layout="column" class="metric-label">Critical Issues</div>
+				<div layout="column" ng-class="'metric-diff status-' + project.criticalIssues.status()">
+					{{project.criticalIssues.diff()}}
+				</div>
+				<div layout="column" class="metric-change">
+					({{project.criticalIssues.first}} =&gt; {{project.criticalIssues.last}})
+				</div>
+			</div>
+			<div layout="row" class="metric-row" ng-click="openIssuesList(project, 'MAJOR,MINOR,INFO')">
+				<div layout="column" class="metric-label">Other Issues</div>
+				<div layout="column" ng-class="'metric-diff'">
+					{{project.otherIssues.diff()}}
+				</div>
+				<div layout="column" class="metric-change">
+					({{project.otherIssues.first}} =&gt; {{project.otherIssues.last}})
+				</div>
+			</div>
+			<div layout="row" class="metric-row" ng-click="openOverview(project, 'coverage')">
+				<div layout="column" class="metric-label">Coverage</div>
+				<div layout="column" ng-class="'metric-diff status-' + project.coverage.status()">
+					{{project.coverage.diff()}}%
+				</div>
+				<div layout="column" class="metric-change">
+					({{project.coverage.first}}% =&gt; {{project.coverage.last}}%)
+				</div>
+			</div>
+			<div layout="row" class="metric-row" ng-click="openOverview(project, 'duplications')">
+				<div layout="column" class="metric-label">Duplicates</div>
+				<div layout="column" ng-class="'metric-diff status-' + project.duplicatedLinesDensity.status()">
+					{{project.duplicatedLinesDensity.diff()}}%
+				</div>
+				<div layout="column" class="metric-change">
+					({{project.duplicatedLinesDensity.first}}% =&gt; {{project.duplicatedLinesDensity.last}}%)
+				</div>
+			</div>
+			<div layout="row" class="metric-row" ng-click="openOverview(project, 'structure')">
+				<div layout="column" class="metric-label">Function Complexity</div>
+				<div layout="column" ng-class="'metric-diff status-' + project.functionComplexity.status()">
+					{{project.functionComplexity.diff()}}
+				</div>
+				<div layout="column" class="metric-change">
+					({{project.functionComplexity.first}} =&gt; {{project.functionComplexity.last}})
+				</div>
+			</div>
+		</md-card-content>
+	</md-card>
+</div>
