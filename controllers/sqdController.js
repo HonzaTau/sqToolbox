@@ -57,6 +57,8 @@ app.controller("sqdController", function ($scope, $http) {
 				};
 				var firstCell = response[0].cells[0];
 				var lastCell = response[0].cells[response[0].cells.length - 1];
+
+				$scope.projects[projectIndex].lastAnalysisDate = lastCell.d;
 				
 				$scope.projects[projectIndex].coverage = {
 					first: firstCell.v[coverageIndex],
