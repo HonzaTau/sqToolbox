@@ -32,7 +32,6 @@ app.controller("sqdController", function ($scope, $http) {
 			}
 			*/
 			$scope.getMetricsForProject(projectIndex);
-			$scope.getListOfTcChanges(projectIndex);
 		}
 		$scope.selectedProject = $scope.projects[0];
 	}
@@ -113,7 +112,9 @@ app.controller("sqdController", function ($scope, $http) {
 							status:	function() { return getStatus(this, false); },
 						},
 					});
-				}; 
+				};
+				
+				$scope.getListOfTcChanges(projectIndex);
 				
 			})
 			.error(function (response, status) {
