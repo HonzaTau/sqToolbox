@@ -201,15 +201,14 @@ app.controller("sqdController", function ($scope, $http) {
 		$http.get(tcListOfBuilds)
 			.success(function (response, status) {
 				for (buildIndex = 0; buildIndex < response.build.length; buildIndex++) {
-					build = response.build[buildIndex];
-					$scope.projects[projectIndex].tcBuilds[buildIndex] = {
+					var build = response.build[buildIndex];
+					var tcBuild = {
 						number: build.number,
 						webUrl: build.webUrl,
-						href: build.href,
 					};
-				};
-				$scope.projects[projectIndex].tcBuilds.forEach(function(tcBuild) {
-					var buildDetailsUrl = sqdConfiguration.teamCityUrl + tcBuild.href;
+					$scope.projects[projectIndex].tcBuilds[buildIndex] = tcBuild;
+					
+					var buildDetailsUrl = sqdConfiguration.teamCityUrl + build.href;
 					$http.get(buildDetailsUrl)
 						.success(function (response, status) {
 							tcBuild.finishDate = response.finishDate;
@@ -217,11 +216,12 @@ app.controller("sqdController", function ($scope, $http) {
 							
 							var changesUrl = sqdConfiguration.teamCityUrl + response.changes.href;
 							$http.get(changesUrl)
-								.success(function (response, status2) {
+								.success(function (response, status) {
 									response.change.forEach(function(change) {
+										
 										var changeDetailsUrl = sqdConfiguration.teamCityUrl + change.href;
 										$http.get(changeDetailsUrl)
-											.success(function (response, status2) {
+											.success(function (response, status) {
 												tcBuild.changes.push({
 													username: change.username,
 													webUrl: change.webUrl,
@@ -240,7 +240,7 @@ app.controller("sqdController", function ($scope, $http) {
 						.error(function (response, status) {
 							alert('Error when getting TeamCity build info using ' + buildDetailsUrl);
 						});
-				});
+				};
 			})
 			.error(function (response, status) {
 				alert('Error when getting list of TeamCity builds using ' + tcListOfBuilds);
