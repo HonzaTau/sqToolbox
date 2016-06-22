@@ -1,13 +1,16 @@
 ﻿var sqdConfiguration = {
 	sonarQubeUrl: "http://dev-brn-sonar-staging.swdev.local",
+	teamCityUrl: "http://dev-aus-tc-01.swdev.local",
 	projects: [
 		{
 			projectKey: "NCentral_AgentWindows_CurrentVersion",
+			tcBuildType: "NCentral_AgentWindows_CurrentVersion",
 			baselineDate: "2016-02-13T13:02:59+0100",
 			name: "dev-10.3",
 		},
 		{
 			projectKey: "NCentral_AgentWindows_SprintDSRCRSMRemoval",
+			tcBuildType: "NCentral_AgentWindows_SprintDSRCRSMRemoval",
 			baselineDate: "2016-05-13T11:18:31+0200",
 			name: "DSRC Removal",
 		},
@@ -29,6 +32,7 @@ app.controller("sqdController", function ($scope, $http) {
 			}
 			*/
 			$scope.getMetricsForProject(projectIndex);
+			$scope.getListOfTcChanges(projectIndex);
 		}
 		$scope.selectedProject = $scope.projects[0];
 	}
@@ -186,6 +190,41 @@ app.controller("sqdController", function ($scope, $http) {
 			});
 			
 	}
+	
+	$scope.getListOfTcChanges = function(projectIndex) {
+		$scope.tcBuilds = [];
+		
+		var tcListOfBuilds = sqdConfiguration.teamCityUrl + "/guestAuth/app/rest/builds/?locator=";
+		tcListOfBuilds += "buildType:" + sqdConfiguration.projects[projectIndex].tcBuildType;
+		tcListOfBuilds += ",running:false,status:success";
+		
+		$http.get(tcListOfBuilds)
+			.success(function (response, status) {
+				for (buildIndex = 0; buildIndex < response.build.length; buildIndex++) {
+					build = response.build[buildIndex];
+					$scope.tcBuilds[buildIndex] = {
+						number: build.number,
+						webUrl: build.webUrl,
+						href: build.href,
+					};
+				};
+				$scope.tcBuilds.forEach(function(tcBuild) {
+					var buildDetailsUrl = sqdConfiguration.teamCityUrl + tcBuild.href;
+					$http.get(buildDetailsUrl)
+						.success(function (response, status) {
+							tcBuild.finishDate = new Date(response.finishDate);
+							tcBuild.changesHref = response.changes.href;
+						})
+						.error(function (response, status) {
+							alert('Error when getting TeamCity build info using ' + buildDetailsUrl);
+						});
+				});
+			})
+			.error(function (response, status) {
+				alert('Error when getting list of TeamCity builds using ' + tcListOfBuilds);
+			});
+	}
+	
 	
 	$scope.openIssuesList = function(project, severity) {
 		var url = sqdConfiguration.sonarQubeUrl + "/component_issues/index?";
