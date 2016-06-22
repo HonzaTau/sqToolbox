@@ -115,7 +115,7 @@ app.controller("sqdController", function ($scope, $http) {
 					});
 				};
 				
-				$scope.getListOfTcChanges(projectIndex);
+				$scope.getListOfTcBuilds(projectIndex);
 				
 			})
 			.error(function (response, status) {
@@ -193,7 +193,7 @@ app.controller("sqdController", function ($scope, $http) {
 			
 	}
 	
-	$scope.getListOfTcChanges = function(projectIndex) {
+	$scope.getListOfTcBuilds = function(projectIndex) {
 		$scope.projects[projectIndex].tcBuilds = [];
 		
 		var tcListOfBuilds = sqdConfiguration.teamCityUrl + "/guestAuth/app/rest/builds/?locator=";
@@ -204,55 +204,59 @@ app.controller("sqdController", function ($scope, $http) {
 			.success(function (response, status) {
 				for (buildIndex = 0; buildIndex < response.build.length; buildIndex++) {
 					var build = response.build[buildIndex];
-					var tcBuild = {
+					$scope.projects[projectIndex].tcBuilds[buildIndex] = {
 						number: build.number,
 						webUrl: build.webUrl,
+						href: build.href,
 					};
-					$scope.projects[projectIndex].tcBuilds[buildIndex] = tcBuild;
 					
-					var buildDetailsUrl = sqdConfiguration.teamCityUrl + build.href;
-					$http.get(buildDetailsUrl)
-						.success(function (response, status) {
-							tcBuild.startDate = getTcDate(response.startDate);
-							tcBuild.changes = [];
-							
-							for (historyIndex = 0; historyIndex < $scope.projects[projectIndex].history.length; historyIndex++) {
-								if (tcBuild.startDate < $scope.projects[projectIndex].history[historyIndex].analysisDate) {
-									$scope.projects[projectIndex].history[historyIndex].builds.push(tcBuild);
-									break;
-								}
-							}
-							
-							var changesUrl = sqdConfiguration.teamCityUrl + response.changes.href;
-							$http.get(changesUrl)
-								.success(function (response, status) {
-									response.change.forEach(function(change) {
-										
-										var changeDetailsUrl = sqdConfiguration.teamCityUrl + change.href;
-										$http.get(changeDetailsUrl)
-											.success(function (response, status) {
-												tcBuild.changes.push({
-													username: change.username,
-													webUrl: change.webUrl + "&tab=vcsModificationFiles",
-													comment: response.comment,
-												});
-											})
-											.error(function (response, status) {
-												alert('Error when getting change detials in TeamCity build using ' + changeDetailsUrl);
-											});
-									});
-								})
-								.error(function (response, status) {
-									alert('Error when getting changes in TeamCity build using ' + changesUrl);
-								});
-						})
-						.error(function (response, status) {
-							alert('Error when getting TeamCity build info using ' + buildDetailsUrl);
-						});
+					$scope.getListOfTcChanges(projectIndex, buildIndex);
 				};
 			})
 			.error(function (response, status) {
 				alert('Error when getting list of TeamCity builds using ' + tcListOfBuilds);
+			});
+	}
+	
+	$scope.getListOfTcChanges = function(projectIndex, buildIndex) {
+		var buildDetailsUrl = sqdConfiguration.teamCityUrl + $scope.projects[projectIndex].tcBuilds[buildIndex].href;
+		$http.get(buildDetailsUrl)
+			.success(function (response, status) {
+				$scope.projects[projectIndex].tcBuilds[buildIndex].startDate = getTcDate(response.startDate);
+				$scope.projects[projectIndex].tcBuilds[buildIndex].changes = [];
+				
+				for (historyIndex = 0; historyIndex < $scope.projects[projectIndex].history.length; historyIndex++) {
+					if ($scope.projects[projectIndex].tcBuilds[buildIndex].startDate < $scope.projects[projectIndex].history[historyIndex].analysisDate) {
+						$scope.projects[projectIndex].history[historyIndex].builds.push($scope.projects[projectIndex].tcBuilds[buildIndex]);
+						break;
+					}
+				}
+				
+				var changesUrl = sqdConfiguration.teamCityUrl + response.changes.href;
+				$http.get(changesUrl)
+					.success(function (response, status) {
+						response.change.forEach(function(change) {
+							
+							var changeDetailsUrl = sqdConfiguration.teamCityUrl + change.href;
+							$http.get(changeDetailsUrl)
+								.success(function (response, status) {
+									$scope.projects[projectIndex].tcBuilds[buildIndex].changes.push({
+										username: change.username,
+										webUrl: change.webUrl + "&tab=vcsModificationFiles",
+										comment: response.comment,
+									});
+								})
+								.error(function (response, status) {
+									alert('Error when getting change detials in TeamCity build using ' + changeDetailsUrl);
+								});
+						});
+					})
+					.error(function (response, status) {
+						alert('Error when getting changes in TeamCity build using ' + changesUrl);
+					});
+			})
+			.error(function (response, status) {
+				alert('Error when getting TeamCity build info using ' + buildDetailsUrl);
 			});
 	}
 	
