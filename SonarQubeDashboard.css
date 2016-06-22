@@ -53,6 +53,18 @@ div.history-header div.history-analysisDate {
 	font-weight: bold;
 }
 
+.history-header .history-build-number {
+	width: 100px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.history-header .history-build-changes {
+	width: 850px;
+	text-align: center;
+	font-weight: bold;
+}
+
 
 .history-row .history-analysisDate {
 	width: 220px;
@@ -69,4 +81,25 @@ div.history-header div.history-analysisDate {
 .history-row .history-functionComplexity {
 	width: 100px;
 	text-align: right;
+}
+
+.history-row .history-build-number {
+	width: 100px;
+	text-align: center;
+}
+
+.history-row .history-build-changes {
+	width: 850px;
+}
+
+.history-row .history-build-changes-username {
+	width: 150px;
+	text-align: left;
+	font-size: small;
+}
+
+.history-row .history-build-changes-comment {
+	width: 700px;
+	text-align: left;
+	font-size: small;
 }

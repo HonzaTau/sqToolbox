@@ -2,7 +2,7 @@
 	<md-card ng-repeat="project in projects track by $index" class="metrics">
 		<md-toolbar layout="row" class="md-hue-3">
 			<div class="md-toolbar-tools">
-				<span>{{project.name}}</span>
+				<span ng-click="displayProjectHistory(project)">{{project.name}}</span>
 			</div>
 		</md-toolbar>		
 		<md-card-content>

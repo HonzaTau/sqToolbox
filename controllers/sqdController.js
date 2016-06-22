@@ -111,6 +111,7 @@ app.controller("sqdController", function ($scope, $http) {
 							diff:  function() { return getDiff(this, 1); },
 							status:	function() { return getStatus(this, false); },
 						},
+						builds: [],
 					});
 				};
 				
@@ -212,8 +213,15 @@ app.controller("sqdController", function ($scope, $http) {
 					var buildDetailsUrl = sqdConfiguration.teamCityUrl + build.href;
 					$http.get(buildDetailsUrl)
 						.success(function (response, status) {
-							tcBuild.finishDate = response.finishDate;
+							tcBuild.startDate = getTcDate(response.startDate);
 							tcBuild.changes = [];
+							
+							for (historyIndex = 0; historyIndex < $scope.projects[projectIndex].history.length; historyIndex++) {
+								if (tcBuild.startDate < $scope.projects[projectIndex].history[historyIndex].analysisDate) {
+									$scope.projects[projectIndex].history[historyIndex].builds.push(tcBuild);
+									break;
+								}
+							}
 							
 							var changesUrl = sqdConfiguration.teamCityUrl + response.changes.href;
 							$http.get(changesUrl)
@@ -225,7 +233,7 @@ app.controller("sqdController", function ($scope, $http) {
 											.success(function (response, status) {
 												tcBuild.changes.push({
 													username: change.username,
-													webUrl: change.webUrl,
+													webUrl: change.webUrl + "&tab=vcsModificationFiles",
 													comment: response.comment,
 												});
 											})
@@ -263,6 +271,10 @@ app.controller("sqdController", function ($scope, $http) {
 		url += "id=" + project.projectKey;
 		window.open(url,'_blank');
 	}
+
+	$scope.displayProjectHistory = function(project) {
+		$scope.selectedProject = project;
+	}
 	
 	function getOneSecondAfterBaselineDate(baselineDate) {
 		var newBaselineDate = new Date(baselineDate);
@@ -299,6 +311,11 @@ app.controller("sqdController", function ($scope, $http) {
 		return status;
 	}
 
+	function getTcDate(tcDate) {
+		var reformattedDate = tcDate.substring(0, 4) + "-" + tcDate.substring(4, 6) + "-" + tcDate.substring(6, 8) + "T" + tcDate.substring(9, 11) + ":" + tcDate.substring(11, 13) + ":" + tcDate.substring(13);
+		return new Date(reformattedDate);
+	}
+	
 	$scope.tests_getMetrics = function() {
 		$scope.projects = [];
 		
