@@ -192,7 +192,7 @@ app.controller("sqdController", function ($scope, $http) {
 	}
 	
 	$scope.getListOfTcChanges = function(projectIndex) {
-		$scope.tcBuilds = [];
+		$scope.projects[projectIndex].tcBuilds = [];
 		
 		var tcListOfBuilds = sqdConfiguration.teamCityUrl + "/guestAuth/app/rest/builds/?locator=";
 		tcListOfBuilds += "buildType:" + sqdConfiguration.projects[projectIndex].tcBuildType;
@@ -202,18 +202,40 @@ app.controller("sqdController", function ($scope, $http) {
 			.success(function (response, status) {
 				for (buildIndex = 0; buildIndex < response.build.length; buildIndex++) {
 					build = response.build[buildIndex];
-					$scope.tcBuilds[buildIndex] = {
+					$scope.projects[projectIndex].tcBuilds[buildIndex] = {
 						number: build.number,
 						webUrl: build.webUrl,
 						href: build.href,
 					};
 				};
-				$scope.tcBuilds.forEach(function(tcBuild) {
+				$scope.projects[projectIndex].tcBuilds.forEach(function(tcBuild) {
 					var buildDetailsUrl = sqdConfiguration.teamCityUrl + tcBuild.href;
 					$http.get(buildDetailsUrl)
 						.success(function (response, status) {
-							tcBuild.finishDate = new Date(response.finishDate);
-							tcBuild.changesHref = response.changes.href;
+							tcBuild.finishDate = response.finishDate;
+							tcBuild.changes = [];
+							
+							var changesUrl = sqdConfiguration.teamCityUrl + response.changes.href;
+							$http.get(changesUrl)
+								.success(function (response, status2) {
+									response.change.forEach(function(change) {
+										var changeDetailsUrl = sqdConfiguration.teamCityUrl + change.href;
+										$http.get(changeDetailsUrl)
+											.success(function (response, status2) {
+												tcBuild.changes.push({
+													username: change.username,
+													webUrl: change.webUrl,
+													comment: response.comment,
+												});
+											})
+											.error(function (response, status) {
+												alert('Error when getting change detials in TeamCity build using ' + changeDetailsUrl);
+											});
+									});
+								})
+								.error(function (response, status) {
+									alert('Error when getting changes in TeamCity build using ' + changesUrl);
+								});
 						})
 						.error(function (response, status) {
 							alert('Error when getting TeamCity build info using ' + buildDetailsUrl);

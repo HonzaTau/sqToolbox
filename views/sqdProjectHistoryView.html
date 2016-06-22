@@ -1,4 +1,15 @@
-﻿<div layout="row" class="history-header">
+﻿		<div layout="row" ng-repeat="tcBuild in selectedProject.tcBuilds track by $index">
+			<div layout="column">{{tcBuild.finishDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</div>
+			<div layout="column">{{tcBuild.number}}</div>
+			<div layout="column">
+				<div layout="row" ng-repeat="change in tcBuild.changes track by $index">
+					<div layout="column">{{change.username}}</div>
+					<div layout="column">{{change.comment}}</div>
+				</div>
+			</div>
+		</div>
+
+<div layout="row" class="history-header">
 	<div layout="column" class="history-analysisDate">Date</div>
 	<div layout="column" class="history-coverage">Coverage (%)</div>
 	<div layout="column" class="history-duplicatedLinesDensity">Duplicates (%)</div>
