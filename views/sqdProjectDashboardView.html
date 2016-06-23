@@ -1,5 +1,6 @@
 ﻿<div layout="row">
 	<md-card ng-repeat="project in projects track by $index" class="metrics">
+		<p>{{project.json()}}</p>
 		<md-toolbar layout="row" class="md-hue-3">
 			<div class="md-toolbar-tools">
 				<span ng-click="displayProjectHistory(project)">{{project.name}}</span>
