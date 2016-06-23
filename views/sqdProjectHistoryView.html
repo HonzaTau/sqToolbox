@@ -14,7 +14,7 @@
 	<div layout="row" ng-class="'history-builds'" ng-repeat="build in historyRecord.builds track by $index">
 		<div layout="column" class="history-build-number"><a href="{{build.webUrl}}" target="_blank">{{build.number}}</a></div>
 		<div layout="column" class="history-build-changes">
-			<div layout="row" ng-repeat="change in build.changes track by $index">
+			<div layout="row" ng-repeat="change in build.changes track by $index" class="history-build-changes-row">
 				<div layout="column" class="history-build-changes-username">{{change.username}}</div>
 				<div layout="column" class="history-build-changes-comment"><a href="{{change.webUrl}}" target="_blank">{{change.comment}}</a></div>
 			</div>

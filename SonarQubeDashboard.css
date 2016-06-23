@@ -45,39 +45,72 @@
 	color: red;
 }
 
-div.history-header div.history-analysisDate {
+.history-header {
+	border-bottom-color: rgba(0,0,0,0.12);
+	border-bottom-width: 1px;
+    border-bottom-style: solid;
+	border-top-color: rgba(0,0,0,0.12);
+	border-top-width: 1px;
+    border-top-style: solid;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.history-header .history-analysisDate {
 	width: 220px;
 	text-align: center;
-	font-weight: bold;
+	font-size: 12sp;
+	color: rgba(0, 0, 0, 0.54);
+	font-family: 'Roboto';
 }
 .history-header .history-coverage {
 	width: 100px;
 	text-align: center;
-	font-weight: bold;
+	font-size: 12sp;
+	color: rgba(0, 0, 0, 0.54);
+	font-family: 'Roboto';
 }
 .history-header .history-duplicatedLinesDensity {
 	width: 100px;
 	text-align: center;
-	font-weight: bold;
+	font-size: 12sp;
+	color: rgba(0, 0, 0, 0.54);
+	font-family: 'Roboto';
 }
 .history-header .history-functionComplexity {
 	width: 100px;
 	text-align: center;
-	font-weight: bold;
+	font-size: 12sp;
+	color: rgba(0, 0, 0, 0.54);
+	font-family: 'Roboto';
 }
 
 .history-header .history-build-number {
 	width: 100px;
 	text-align: center;
-	font-weight: bold;
+	font-size: 12sp;
+	color: rgba(0, 0, 0, 0.54);
+	font-family: 'Roboto';
 }
 
 .history-header .history-build-changes {
 	width: 850px;
 	text-align: center;
-	font-weight: bold;
+	font-size: 12sp;
+	color: rgba(0, 0, 0, 0.54);
+	font-family: 'Roboto';
 }
 
+.history-row {
+	font-size: 13sp;
+	color: rgba(0, 0, 0, 0.87);
+	font-family: 'Roboto';
+	border-bottom-color: rgba(0,0,0,0.12);
+	border-bottom-width: 1px;
+    border-bottom-style: solid;
+	min-height: 36px;
+	padding-top: 8px;
+}
 
 .history-row .history-analysisDate {
 	width: 220px;
@@ -95,24 +128,26 @@ div.history-header div.history-analysisDate {
 	width: 100px;
 	text-align: right;
 }
-
 .history-row .history-build-number {
 	width: 100px;
 	text-align: center;
 }
-
 .history-row .history-build-changes {
-	width: 850px;
+	width: 100%;
+}
+.history-row .history-build-changes-row {
+	border-bottom-color: rgba(0,0,0,0.12);
+	border-bottom-width: 1px;
+    border-bottom-style: solid;
+	padding-top: 8px;
+	padding-bottom: 8px;
 }
 
 .history-row .history-build-changes-username {
 	width: 150px;
 	text-align: left;
-	font-size: small;
 }
 
 .history-row .history-build-changes-comment {
-	width: 700px;
 	text-align: left;
-	font-size: small;
 }
