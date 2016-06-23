@@ -1,23 +1,27 @@
-﻿<div layout="row" class="history-header">
-	<div layout="column" class="history-analysisDate">Date</div>
-	<div layout="column" class="history-coverage">Coverage (%)</div>
-	<div layout="column" class="history-duplicatedLinesDensity">Duplicates (%)</div>
-	<div layout="column" class="history-functionComplexity">Function Complexity</div>
-	<div layout="column" class="history-build-number">Build #</div>
-	<div layout="column" class="history-build-changes">Changes</div>
-</div>
-<div layout="row" ng-repeat="historyRecord in selectedProject.history track by $index" class="history-row">
-	<div layout="column" ng-class="'history-analysisDate'">{{historyRecord.analysisDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</div>
-	<div layout="column" ng-class="'history-coverage status-' + historyRecord.coverage.status()">{{historyRecord.coverage.diff()}}</div>
-	<div layout="column" ng-class="'history-duplicatedLinesDensity status-' + historyRecord.duplicatedLinesDensity.status()">{{historyRecord.duplicatedLinesDensity.diff()}}</div>
-	<div layout="column" ng-class="'history-functionComplexity status-' + historyRecord.functionComplexity.status()">{{historyRecord.functionComplexity.diff()}}</div>
-	<div layout="row" ng-class="'history-builds'" ng-repeat="build in historyRecord.builds track by $index">
-		<div layout="column" class="history-build-number"><a href="{{build.webUrl}}" target="_blank">{{build.number}}</a></div>
-		<div layout="column" class="history-build-changes">
-			<div layout="row" ng-repeat="change in build.changes track by $index" class="history-build-changes-row">
-				<div layout="column" class="history-build-changes-username">{{change.username}}</div>
-				<div layout="column" class="history-build-changes-comment"><a href="{{change.webUrl}}" target="_blank">{{change.comment}}</a></div>
+﻿<md-card>
+	<md-card-content>
+	<div layout="row" class="history-header">
+		<div layout="column" class="history-analysisDate">Date</div>
+		<div layout="column" class="history-coverage">Coverage (%)</div>
+		<div layout="column" class="history-duplicatedLinesDensity">Duplicates (%)</div>
+		<div layout="column" class="history-functionComplexity">Function Complexity</div>
+		<div layout="column" class="history-build-number">Build #</div>
+		<div layout="column" class="history-build-changes">Changes</div>
+	</div>
+	<div layout="row" ng-repeat="historyRecord in selectedProject.history track by $index" class="history-row">
+		<div layout="column" ng-class="'history-analysisDate'">{{historyRecord.analysisDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</div>
+		<div layout="column" ng-class="'history-coverage status-' + historyRecord.coverage.status()">{{historyRecord.coverage.diff()}}</div>
+		<div layout="column" ng-class="'history-duplicatedLinesDensity status-' + historyRecord.duplicatedLinesDensity.status()">{{historyRecord.duplicatedLinesDensity.diff()}}</div>
+		<div layout="column" ng-class="'history-functionComplexity status-' + historyRecord.functionComplexity.status()">{{historyRecord.functionComplexity.diff()}}</div>
+		<div layout="row" ng-class="'history-builds'" ng-repeat="build in historyRecord.builds track by $index">
+			<div layout="column" class="history-build-number"><a href="{{build.webUrl}}" target="_blank">{{build.number}}</a></div>
+			<div layout="column" class="history-build-changes">
+				<div layout="row" ng-repeat="change in build.changes track by $index" class="history-build-changes-row">
+					<div layout="column" class="history-build-changes-username">{{change.username}}</div>
+					<div layout="column" class="history-build-changes-comment"><a href="{{change.webUrl}}" target="_blank">{{change.comment}}</a></div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+	</md-card-content>
+</md-card>
