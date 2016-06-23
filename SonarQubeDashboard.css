@@ -1,5 +1,5 @@
 .project-summary {
-	width: 380px;
+	width: 360px;
 	display: inline-block;
 }
 
@@ -28,7 +28,11 @@
 	font-weight: bold;
 }
 .metric-more-info {
-	width: 90px;
+	width: 60px;
+	padding-left: 10px;
+}
+.metric-more-info .md-button {
+	min-width: 30px;
 }
 
 .status-none {
