@@ -1,21 +1,36 @@
-.metrics {
-	width: 420px;
+.project-summary {
+	width: 380px;
+	display: inline-block;
 }
 
-.metric-row {
-	height: 30px;
-	padding-top: 7px;
+.project-summary-subheader {
+	background-color: white;
+}
+
+.project-summary-content {
+	padding: 0px;
+}
+
+
+
+.project-summary-row {
+	height: 48px;
 }
 
 .metric-label {
-	width: 170px;
-	display: inline-block;
+	width: 200px;
+	padding-top: 16px;
 }
 .metric-diff {
 	width: 60px;
+	padding-top: 16px;
 	text-align: right;
 	font-weight: bold;
 }
+.metric-more-info {
+	width: 90px;
+}
+
 .status-none {
 	color: orange;
 }
@@ -24,12 +39,6 @@
 }
 .status-decline {
 	color: red;
-}
-.metric-change {
-	width: 150px;
-	text-align: center;
-	padding-left: 5px;
-	font-size: small;
 }
 
 div.history-header div.history-analysisDate {
