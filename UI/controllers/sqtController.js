@@ -1,4 +1,4 @@
-﻿var sqdConfiguration = {
+﻿var sqtConfiguration = {
 	sonarQubeUrl: "http://dev-brn-sonar-staging.swdev.local",
 	teamCityUrl: "http://dev-aus-tc-01.swdev.local",
 	projects: [
@@ -17,22 +17,22 @@
 	],
 };
 
-var app = angular.module("SonarQubeDashboardApp", ['ngMaterial']);
+var app = angular.module("ProjectsDashboardApp", ['ngMaterial']);
 
-app.controller("sqdController", function ($scope, $http) {
+app.controller("sqtController", function ($scope, $http) {
 
 	$scope.getMetrics = function() {
 		$scope.projects = [];
-		for (projectIndex = 0; projectIndex < sqdConfiguration.projects.length; projectIndex++) { 
-			$scope.projects[projectIndex] = sqdConfiguration.projects[projectIndex];
+		for (projectIndex = 0; projectIndex < sqtConfiguration.projects.length; projectIndex++) { 
+			$scope.projects[projectIndex] = sqtConfiguration.projects[projectIndex];
 			$scope.getMetricsForProject(projectIndex);
 		}
 	}
 
 	$scope.getMetricsForProject = function(projectIndex) {
-		var timemachineApiUrl = sqdConfiguration.sonarQubeUrl + "/api/timemachine/index?&metrics=duplicated_blocks,duplicated_lines,duplicated_lines_density,coverage,line_coverage,function_complexity,file_complexity,class_complexity";
-		timemachineApiUrl += "&resource=" + sqdConfiguration.projects[projectIndex].projectKey;
-		timemachineApiUrl += "&fromDateTime=" + encodeURIComponent(sqdConfiguration.projects[projectIndex].baselineDate);
+		var timemachineApiUrl = sqtConfiguration.sonarQubeUrl + "/api/timemachine/index?&metrics=duplicated_blocks,duplicated_lines,duplicated_lines_density,coverage,line_coverage,function_complexity,file_complexity,class_complexity";
+		timemachineApiUrl += "&resource=" + sqtConfiguration.projects[projectIndex].projectKey;
+		timemachineApiUrl += "&fromDateTime=" + encodeURIComponent(sqtConfiguration.projects[projectIndex].baselineDate);
 		
 		$http.get(timemachineApiUrl)
 			.success(function (response, status) {
@@ -115,12 +115,12 @@ app.controller("sqdController", function ($scope, $http) {
 				console.log('Error when getting metrics using ' + timemachineApiUrl);
 			});
 
-		var issuesFirstApiUrl = sqdConfiguration.sonarQubeUrl + "/api/issues/search?resolved=false&ps=1";
-		issuesFirstApiUrl += "&projectKeys=" + sqdConfiguration.projects[projectIndex].projectKey;
-		issuesFirstApiUrl += "&createdBefore=" + encodeURIComponent(getOneSecondAfterBaselineDate(sqdConfiguration.projects[projectIndex].baselineDate));
+		var issuesFirstApiUrl = sqtConfiguration.sonarQubeUrl + "/api/issues/search?resolved=false&ps=1";
+		issuesFirstApiUrl += "&projectKeys=" + sqtConfiguration.projects[projectIndex].projectKey;
+		issuesFirstApiUrl += "&createdBefore=" + encodeURIComponent(getOneSecondAfterBaselineDate(sqtConfiguration.projects[projectIndex].baselineDate));
 
-		var issuesLastApiUrl = sqdConfiguration.sonarQubeUrl + "/api/issues/search?resolved=false&ps=1";
-		issuesLastApiUrl += "&projectKeys=" + sqdConfiguration.projects[projectIndex].projectKey;
+		var issuesLastApiUrl = sqtConfiguration.sonarQubeUrl + "/api/issues/search?resolved=false&ps=1";
+		issuesLastApiUrl += "&projectKeys=" + sqtConfiguration.projects[projectIndex].projectKey;
 		
 		$scope.projects[projectIndex].blockerIssues = {
 			diff: 	function() { return getDiff(this, 0); },
@@ -189,8 +189,8 @@ app.controller("sqdController", function ($scope, $http) {
 	$scope.getListOfTcBuilds = function(projectIndex) {
 		$scope.projects[projectIndex].tcBuilds = [];
 		
-		var tcListOfBuilds = sqdConfiguration.teamCityUrl + "/guestAuth/app/rest/builds/?locator=";
-		tcListOfBuilds += "buildType:" + sqdConfiguration.projects[projectIndex].tcBuildType;
+		var tcListOfBuilds = sqtConfiguration.teamCityUrl + "/guestAuth/app/rest/builds/?locator=";
+		tcListOfBuilds += "buildType:" + sqtConfiguration.projects[projectIndex].tcBuildType;
 		tcListOfBuilds += ",running:false,status:success";
 		
 		$http.get(tcListOfBuilds)
@@ -212,7 +212,7 @@ app.controller("sqdController", function ($scope, $http) {
 	}
 	
 	$scope.getListOfTcChanges = function(projectIndex, buildIndex) {
-		var buildDetailsUrl = sqdConfiguration.teamCityUrl + $scope.projects[projectIndex].tcBuilds[buildIndex].href;
+		var buildDetailsUrl = sqtConfiguration.teamCityUrl + $scope.projects[projectIndex].tcBuilds[buildIndex].href;
 		$http.get(buildDetailsUrl)
 			.success(function (response, status) {
 				$scope.projects[projectIndex].tcBuilds[buildIndex].startDate = getTcDate(response.startDate);
@@ -225,12 +225,12 @@ app.controller("sqdController", function ($scope, $http) {
 					}
 				}
 				
-				var changesUrl = sqdConfiguration.teamCityUrl + response.changes.href;
+				var changesUrl = sqtConfiguration.teamCityUrl + response.changes.href;
 				$http.get(changesUrl)
 					.success(function (response, status) {
 						response.change.forEach(function(change) {
 							
-							var changeDetailsUrl = sqdConfiguration.teamCityUrl + change.href;
+							var changeDetailsUrl = sqtConfiguration.teamCityUrl + change.href;
 							$http.get(changeDetailsUrl)
 								.success(function (response, status) {
 									$scope.projects[projectIndex].tcBuilds[buildIndex].changes.push({
@@ -255,7 +255,7 @@ app.controller("sqdController", function ($scope, $http) {
 	
 	
 	$scope.openIssuesList = function(project, severity) {
-		var url = sqdConfiguration.sonarQubeUrl + "/component_issues/index?";
+		var url = sqtConfiguration.sonarQubeUrl + "/component_issues/index?";
 		url += "id=" + project.projectKey;
 		url += "#resolved=false";
 		url += "|createdAfter=" + encodeURIComponent(project.baselineDate);
@@ -264,7 +264,7 @@ app.controller("sqdController", function ($scope, $http) {
 	}
 	
 	$scope.openOverview = function(project, overviewType) {
-		var url = sqdConfiguration.sonarQubeUrl + "/overview/" + overviewType + "?";
+		var url = sqtConfiguration.sonarQubeUrl + "/overview/" + overviewType + "?";
 		url += "id=" + project.projectKey;
 		window.open(url,'_blank');
 	}

@@ -2,34 +2,31 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
-    <title>SonarQube Dashboard</title>
+    <title>Projects Dashboard</title>
 	
 	<!-- Angular Material style sheet -->
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto' type='text/css'>
-	<link rel="stylesheet" href="./SonarQubeDashboard.css">
+	<link rel="stylesheet" href="css/ProjectsDashboard.css">
 </head>
-<body ng-app="SonarQubeDashboardApp">
-	<div ng-controller="sqdController">
+<body ng-app="ProjectsDashboardApp">
 
-
-  <md-content>
-    <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
-      <md-tab label="Dashboard">
-        <md-content class="md-padding">
-			<div ng-include="'views/sqdProjectDashboardView.html'"></div>
-        </md-content>
-      </md-tab>
-      <md-tab label="History">
-        <md-content class="md-padding">
-			<div ng-include="'views/sqdProjectHistoryView.html'"></div>
-        </md-content>
-      </md-tab>
-    </md-tabs>
-  </md-content>
-
-	
+	<div ng-controller="sqtController">
+		<md-content>
+			<md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
+				<md-tab label="Dashboard">
+					<md-content class="md-padding">
+						<div ng-include="'views/projectSummaryView.html'"></div>
+					</md-content>
+				</md-tab>
+				<md-tab label="History">
+					<md-content class="md-padding">
+						<div ng-include="'views/projectHistoryView.html'"></div>
+					</md-content>
+				</md-tab>
+			</md-tabs>
+		</md-content>
     </div>
 	
 	<!-- Angular Material requires Angular.js Libraries -->
@@ -41,6 +38,6 @@
 	<!-- Angular Material Library -->
 	<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>	
 	
-    <script src="controllers/sqdController.js"></script>
+    <script src="controllers/sqtController.js"></script>
 </body>
 </html>
