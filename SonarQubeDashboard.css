@@ -45,6 +45,12 @@
 	color: red;
 }
 
+.history-page-header {
+	font-size: 20sp;
+	color: rgba(0, 0, 0, 0.87);
+	font-family: 'Roboto';
+}
+
 .history-header {
 	border-bottom-color: rgba(0,0,0,0.12);
 	border-bottom-width: 1px;

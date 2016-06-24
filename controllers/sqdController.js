@@ -271,6 +271,7 @@ app.controller("sqdController", function ($scope, $http) {
 
 	$scope.displayProjectHistory = function(project) {
 		$scope.selectedProject = project;
+		$scope.selectedTab = 1;
 	}
 	
 	function getOneSecondAfterBaselineDate(baselineDate) {
@@ -356,5 +357,8 @@ app.controller("sqdController", function ($scope, $http) {
 	}
 
 	$scope.tests_getMetrics();
+	
+	$scope.selectedProject = $scope.projects[0];
+	$scope.selectedTab = 0;
 	// $scope.getMetrics();
 });
