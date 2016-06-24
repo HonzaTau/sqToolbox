@@ -78,6 +78,7 @@
 }
 .history-header .history-build-changes {
 	text-align: center;
+	padding-top: 8px;
 }
 
 .history-row {
@@ -88,29 +89,37 @@
 	border-bottom-width: 1px;
     border-bottom-style: solid;
 	min-height: 36px;
-	padding-top: 8px;
 }
 .history-analysisDate {
 	width: 220px;
 	text-align: center;
+	padding-top: 8px;
 }
 .history-coverage {
 	width: 100px;
 	text-align: right;
+	padding-top: 8px;
 }
 .history-duplicatedLinesDensity {
 	width: 100px;
 	text-align: right;
+	padding-top: 8px;
 }
 .history-functionComplexity {
 	width: 100px;
 	text-align: right;
+	padding-top: 8px;
+}
+.history-builds {
+	width: 1100px;
 }
 .history-build-number {
-	width: 100px;
+	width: 70px;
 	text-align: center;
+	padding-top: 8px;
 }
 .history-build-changes {
+	width: 1030px;
 }
 .history-build-changes-row {
 	border-bottom-color: rgba(0,0,0,0.12);
@@ -124,5 +133,6 @@
 	text-align: left;
 }
 .history-build-changes-comment {
+	width: 880px;
 	text-align: left;
 }
